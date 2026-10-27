@@ -440,7 +440,11 @@ func (c *clientConfig) Config() (*client.Config, error) {
 func runClient(cmd *cobra.Command, args []string) {
 	logger.Info("client mode")
 
-	if err := viper.ReadInConfig(); err != nil {
+	if cfgFile == "-" {
+		if err := viper.ReadConfig(os.Stdin); err != nil {
+			logger.Fatal("failed to read client config from stdin", zap.Error(err))
+		}
+	} else if err := viper.ReadInConfig(); err != nil {
 		logger.Fatal("failed to read client config", zap.Error(err))
 	}
 	var config clientConfig
