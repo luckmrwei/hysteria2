@@ -124,7 +124,10 @@ func initFlags() {
 
 func initConfig() {
 	defaultViper = viper.New()
-	if cfgFile != "" {
+	if cfgFile == "-" {
+		// stdin mode: config is piped in, format must be specified manually
+		defaultViper.SetConfigType("yaml")
+	} else if cfgFile != "" {
 		defaultViper.SetConfigFile(cfgFile)
 	} else {
 		defaultViper.SetConfigName("config")

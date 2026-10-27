@@ -836,7 +836,11 @@ func runClientCmd(cmd *cobra.Command, args []string) {
 }
 
 func runClient(v *viper.Viper) {
-	if err := v.ReadInConfig(); err != nil {
+	if cfgFile == "-" {
+		if err := v.ReadConfig(os.Stdin); err != nil {
+			logger.Fatal("failed to read client config from stdin", zap.Error(err))
+		}
+	} else if err := v.ReadInConfig(); err != nil {
 		logger.Fatal("failed to read client config", zap.Error(err))
 	}
 	var config clientConfig
